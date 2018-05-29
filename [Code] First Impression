@@ -1,0 +1,200 @@
+#include <iostream>
+#include <ctime>
+#include <cstdlib>
+
+void actionMenu() {
+    std::cout << "============================" << std::endl
+              << "= What do you want to do ? =" << std::endl
+              << "= 1. Attack                =" << std::endl
+              << "= 2. Heal yourself         =" << std::endl
+              << "============================" << std::endl;
+}
+
+void mainMenu() {
+    std::cout << "********************************************" << std::endl
+              << "*            WELCOME TO THE GAME !         *" << std::endl
+              << "*    Your goal is to destroy the IA        *" << std::endl
+              << "* You've got dices, choose your action,and *" << std::endl
+              << "* the dice will roll.                      *" << std::endl
+              << "* You can attack or heal, but it's random. *" << std::endl
+              << "* Your attack and your healing power will  *" << std::endl
+              << "* be different according to a class you'll *" << std::endl
+              << "* choose.                                  *" << std::endl
+              << "* You got it, you'll need luck.            *" << std::endl
+              << "* After each action, you could upgrade your*" << std::endl
+              << "* attack, your healing or your HP by one.  *" << std::endl
+              << "* Just push 1, 2 or 3 for do the actions.  *" << std::endl
+              << "*                Good luck !!              *" << std::endl
+              << "********************************************" << std::endl;
+
+}
+
+void boostMenu() {
+    std::cout << "++++++++++++++++++++++++++++" << std::endl
+              << "+ What would you upgrade ? +" << std::endl
+              << "+ 1. HP                    +" << std::endl
+              << "+ 2. Attack                +" << std::endl
+              << "+ 3. Heal                  +" << std::endl
+              << "++++++++++++++++++++++++++++" << std::endl;
+}
+
+void statMenu( int damageDice, int healDice, int yourHP, int maxHP ) {
+    std::cout << "------------------------------"                          << std::endl
+              << "- You now have :             -"                          << std::endl
+              << "-" << damageDice << " Attack                   -"        << std::endl
+              << "-" << healDice << " Healing power             -"         << std::endl
+              << "-" << yourHP << "/" << maxHP << " HP                  -" << std::endl
+              << "------------------------------"                          << std::endl;
+}
+
+void classMenu() {
+    std::cout  << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << std::endl
+               << "~ Now choose a class !                 ~" << std::endl
+               << "~  1 . Warrior :                       ~" << std::endl
+               << "~ 150 HP / 12 Attack / 2 Healing power ~" << std::endl
+               << "~  2 . Wizard :                        ~" << std::endl
+               << "~ 75 HP / 16 Attack / 12 Healing power ~" << std::endl
+               << "~  3 . Paladin :                       ~" << std::endl
+               << "~ 135 HP / 6 Attack / 10 Healing power ~" << std::endl
+               << "~  4 . Priest :                        ~" << std::endl
+               << "~ 97 HP / 10 Attack / 15 Healing power ~" << std::endl
+               << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << std::endl;
+}
+
+int main() {
+    int iaHP( 500 ),
+        yourHP( 0 ),
+        healDice( 0 ),
+        damageDice( 0 ),
+        choice( 0 ),
+        choiceSkill( 0 ),
+        attackRandomNumber( 0 ),
+        healRandomNumber( 0 ),
+        maxHP( 0 ),
+        iaAttack( 0 ),
+        iaHeal( 0 ),
+        iaChoice( -1 ),
+        classChoice ( 0 );
+        srand( time( 0 ) );
+
+    mainMenu();
+
+    std::cout << "Let's begin !"                     << std::endl
+              << "So first of all, choose a class !" << std::endl;
+
+    classMenu();
+
+    std::cin >> classChoice;
+
+    switch( classChoice ) {
+        case 1 :
+            yourHP = 150;
+            maxHP = 150;
+            damageDice = 12;
+            healDice = 2;
+            std::cout << "You're now a Warrior !" << std::endl;
+            break;
+        case 2 :
+            yourHP = 75;
+            maxHP = 75;
+            damageDice = 16;
+            healDice = 12;
+            std::cout << "You're now a Wizard !" << std::endl;
+            break;
+        case 3 :
+            yourHP = 135;
+            maxHP = 135;
+            damageDice = 6;
+            healDice = 10;
+            std::cout << "You're now a Paladin !" << std::endl;
+            break;
+        case 4 :
+            yourHP = 97;
+            maxHP = 97;
+            damageDice = 10;
+            healDice = 15;
+            std::cout << "You're now a Warrior !" << std::endl;
+            break;
+    }
+
+    while( iaHP != 0 || yourHP != 0 ) {
+        statMenu( damageDice, healDice, yourHP, maxHP );
+
+        actionMenu();
+
+        std::cin >> choice;
+
+        switch( choice ) {
+            case 1 :
+                std::cout << "You chose to attack !" << std::endl;
+                attackRandomNumber = rand() % damageDice;
+                iaHP = iaHP - attackRandomNumber;
+                std::cout << "BANG ! You dealed " << attackRandomNumber << " damages to the IA ! The IA have now " << iaHP << "HP !" << std::endl;
+                break;
+
+            case 2 :
+                std::cout << "You chose to heal yourself ! You'll see your life soon !" << std::endl;
+                healRandomNumber = rand() % healDice;
+                if( yourHP < maxHP ) {
+                        yourHP = yourHP + healRandomNumber;
+                }
+                if( yourHP > maxHP ) {
+                        yourHP = maxHP;
+                }
+                std::cout << "You just healed yourself by " << healRandomNumber << "HP" << std::endl;
+                break;
+
+           default :
+                std::cout << "Turn cancelled you didn't choose one or two...";
+                break;
+        }
+        iaChoice = rand() % 2;
+
+        if( iaChoice == 1){
+            std::cout << "The IA attack !" << std::endl;
+            iaAttack = rand() % 20;
+            std::cout << "The IA deals " << iaAttack << " damages to you !" << std::endl;
+            yourHP = yourHP - iaAttack;
+             std::cout << "Ouch you have now " << yourHP << "HP !" << std::endl;
+        } else {
+            std::cout << "The IA heals !" << std::endl;
+            iaHeal = rand() % 7;
+            std::cout << "The IA heals itself by " << iaHeal << " HP !" << std::endl;
+            iaHP = iaHeal + iaHP;
+            std::cout << "The IA have now " << iaHP << " !" << std::endl;
+        }
+
+       if( yourHP == 0 ) {
+            std::cout << "You've been killed...game over" << std::endl;
+            return 0;
+        }
+
+        if( iaHP == 0 ) {
+            std::cout << "You...you've beated the IA...How ?..." << std::endl;
+            return 0;
+        }
+
+        boostMenu();
+        std::cin >> choiceSkill;
+
+        switch( choiceSkill ) {
+            case 1 :
+                maxHP  += 5;
+                yourHP += 5;
+                break;
+
+            case 2 :
+                damageDice++;
+                break;
+
+            case 3 :
+                healDice++;
+                break;
+
+            default :
+                std::cout << "You don't tap 1, 2 or three, upgrade cancelled...";
+                break;
+        }
+    }
+    return 0;
+}
